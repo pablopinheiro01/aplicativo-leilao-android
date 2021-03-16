@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -101,6 +102,16 @@
             app:layout_constraintStart_toStartOf="@id/lances_leilao_titulo_maiores"
             app:layout_constraintTop_toBottomOf="@id/lances_leilao_titulo_maiores"
             tools:text="R$ 1000,00" />
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/lances_leilao_fab_adiciona"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_adiciona"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

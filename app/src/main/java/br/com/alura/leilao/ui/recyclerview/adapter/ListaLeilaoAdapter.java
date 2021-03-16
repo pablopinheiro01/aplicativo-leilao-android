@@ -13,6 +13,7 @@ import org.w3c.dom.Text;
 import java.util.List;
 
 import br.com.alura.leilao.R;
+import br.com.alura.leilao.formatter.FormatadorDeMoeda;
 import br.com.alura.leilao.model.Leilao;
 
 public class ListaLeilaoAdapter extends RecyclerView.Adapter<ListaLeilaoAdapter.ViewHolder> {
@@ -20,10 +21,12 @@ public class ListaLeilaoAdapter extends RecyclerView.Adapter<ListaLeilaoAdapter.
     private final List<Leilao> leiloes;
     private final Context context;
     private OnItemClickListener onItemClickListener;
+    private final FormatadorDeMoeda formatadorDeMoeda;
 
     public ListaLeilaoAdapter(Context context, List<Leilao> leiloes) {
         this.context = context;
         this.leiloes = leiloes;
+        this.formatadorDeMoeda = new FormatadorDeMoeda();
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -69,7 +72,7 @@ public class ListaLeilaoAdapter extends RecyclerView.Adapter<ListaLeilaoAdapter.
         void vincula(Leilao leilao) {
             this.leilao = leilao;
             descricao.setText(leilao.getDescricao());
-            maiorLance.setText(String.valueOf(leilao.getMaiorLance()));
+            maiorLance.setText(formatadorDeMoeda.formata(leilao.getMaiorLance()));
         }
 
     }

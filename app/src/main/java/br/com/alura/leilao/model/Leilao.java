@@ -63,6 +63,7 @@ public class Leilao implements Serializable {
                 lancesDoUsuario++;
                 if(lancesDoUsuario == 5){
                     return true;
+                    
                 }
             }
         }

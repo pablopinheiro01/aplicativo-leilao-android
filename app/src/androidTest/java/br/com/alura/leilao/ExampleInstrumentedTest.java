@@ -37,6 +37,7 @@ public class ExampleInstrumentedTest {
         )));
 
         int quantidadeDeLeiloes = listaLeilaoAdapter.getItemCount();
+        //aqui e a execucao de testes chamado de TESTES INSTRUMENTAIS
         assertThat(quantidadeDeLeiloes, is(2));
     }
 }

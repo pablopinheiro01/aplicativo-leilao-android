@@ -53,6 +53,7 @@ public class ListaLeilaoAdapter extends RecyclerView.Adapter<ListaLeilaoAdapter.
     public void atualiza(List<Leilao> leiloes) {
         this.leiloes.clear();
         this.leiloes.addAll(leiloes);
+        //caso seja comentado o metodo e nao for chamado atravez do mockito podemos identificar esse ponto
         atualizaLista();
     }
 

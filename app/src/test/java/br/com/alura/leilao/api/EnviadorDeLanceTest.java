@@ -32,20 +32,20 @@ public class EnviadorDeLanceTest {
     private Context context;
     @Mock
     private AvisoDialogManager manager;
+    @Mock
+    private Leilao leilao;
 
     @Test
     public void deve_MostrarMensagemDeFalha_QuandoLanceForMenorQueOUltimoLance(){
         EnviadorDeLance enviadorDeLance = new EnviadorDeLance(
                 client,
                 listener,
-                context,
                 manager
         );
 
-        Leilao computador = Mockito.mock(Leilao.class);
-        Mockito.doThrow(LanceMenorQueUltimoLanceException.class).when(computador).propoe(ArgumentMatchers.any(Lance.class));
-        enviadorDeLance.envia(computador, new Lance(new Usuario("Fran"),200.0));
-        Mockito.verify(manager).mostraAvisoLanceMenorQueUltimoLance(context);
+        Mockito.doThrow(LanceMenorQueUltimoLanceException.class).when(leilao).propoe(ArgumentMatchers.any(Lance.class));
+        enviadorDeLance.envia(leilao, new Lance(new Usuario("Fran"),200.0));
+        Mockito.verify(manager).mostraAvisoLanceMenorQueUltimoLance();
     }
 
 
@@ -54,17 +54,14 @@ public class EnviadorDeLanceTest {
         EnviadorDeLance enviadorDeLance = new EnviadorDeLance(
                 client,
                 listener,
-                context,
                 manager
         );
 
-        Leilao computador = Mockito.mock(Leilao.class);
+        Mockito.doThrow(UsuarioJaDeuCincoLancesException.class).when(leilao).propoe(ArgumentMatchers.any(Lance.class));
 
-        Mockito.doThrow(UsuarioJaDeuCincoLancesException.class).when(computador).propoe(ArgumentMatchers.any(Lance.class));
+        enviadorDeLance.envia(leilao, new Lance(new Usuario("Alex"),200.0));
 
-        enviadorDeLance.envia(computador, new Lance(new Usuario("Alex"),200.0));
-
-        Mockito.verify(manager).mostraAvisoUsuarioJaDeuCincoLances(context);
+        Mockito.verify(manager).mostraAvisoUsuarioJaDeuCincoLances();
 
     }
 

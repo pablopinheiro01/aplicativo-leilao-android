@@ -23,14 +23,16 @@ import br.com.alura.leilao.ui.recyclerview.adapter.ListaLeilaoAdapter;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ListaLeilaoActivityTest {
 
+//    @Mock
+//    private Context context;
     @Mock
-    private Context context;
-    @Spy
-    private ListaLeilaoAdapter adapter = new ListaLeilaoAdapter(context);
+    private ListaLeilaoAdapter adapter;
     @Mock//por padrao objetos mockados nao fazem nada
     private LeilaoWebClient client;
 
@@ -38,10 +40,11 @@ public class ListaLeilaoActivityTest {
     public void deve_Atualizar_ListaDeLeiloes_QuandoBuscarLeiLoesDaAPI() throws InterruptedException {
         ListaLeilaoActivity activity = new ListaLeilaoActivity();
 
-        Mockito.doNothing().when(adapter).atualizaLista();
+        //donothin executa para objetos reais e nao mockados
+//        Mockito.doNothing().when(adapter).atualizaLista();
 
         //mockito executando uma resposta
-        Mockito.doAnswer(new Answer() {
+        doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) { //mockado a respsota da requisicao
                 // o objeto e do mesmo tipo do argumetno requisitado dentro do client.
@@ -59,9 +62,19 @@ public class ListaLeilaoActivityTest {
 
         activity.buscaLeiloes(adapter, client);
 
-        int quantidadeDeLeiloesDevolvida = adapter.getItemCount();
+//        int quantidadeDeLeiloesDevolvida = adapter.getItemCount();
+//        assertThat(quantidadeDeLeiloesDevolvida, is(2));
 
-        assertThat(quantidadeDeLeiloesDevolvida, is(2));
+        //vamos verificar apenas se os metodos foram chamados conforme o esperado
+        verify(client).todos(ArgumentMatchers.any(RespostaListener.class));
+        // a lista de leilões tem que ser exatamente a mesma lista enviada na integração com o adapter
+        verify(adapter).atualiza(
+                new ArrayList<Leilao>(Arrays.asList(
+                        new Leilao("Computador"),
+                        new Leilao("Carro")
+                ))
+        );
+
     }
 
 }

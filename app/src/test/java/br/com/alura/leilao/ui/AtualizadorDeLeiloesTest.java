@@ -1,4 +1,4 @@
-package br.com.alura.leilao.ui.activity;
+package br.com.alura.leilao.ui;
 
 import android.content.Context;
 
@@ -6,8 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
@@ -21,24 +19,22 @@ import br.com.alura.leilao.api.retrofit.client.RespostaListener;
 import br.com.alura.leilao.model.Leilao;
 import br.com.alura.leilao.ui.recyclerview.adapter.ListaLeilaoAdapter;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ListaLeilaoActivityTest {
+public class AtualizadorDeLeiloesTest {
 
-//    @Mock
-//    private Context context;
     @Mock
     private ListaLeilaoAdapter adapter;
     @Mock//por padrao objetos mockados nao fazem nada
     private LeilaoWebClient client;
+    @Mock
+    private Context context;
 
     @Test
-    public void deve_Atualizar_ListaDeLeiloes_QuandoBuscarLeiLoesDaAPI() throws InterruptedException {
-        ListaLeilaoActivity activity = new ListaLeilaoActivity();
+    public void deve_AtualizarListaDeLeiloes_QuandoBuscarLeiLoesDaAPI() throws InterruptedException {
+        AtualizadorDeLeiloes atualizador = new AtualizadorDeLeiloes();
 
         //mockito executando uma resposta
         doAnswer(new Answer() {
@@ -57,7 +53,7 @@ public class ListaLeilaoActivityTest {
                 //passo atraves do argumentmatchers uma resposta qualquuer passando um listener qualquer...
                 .todos(ArgumentMatchers.any(RespostaListener.class));
 
-        activity.buscaLeiloes(adapter, client);
+        atualizador.buscaLeiloes(adapter, client, context);
 
         //vamos verificar apenas se os metodos foram chamados conforme o esperado
         verify(client).todos(ArgumentMatchers.any(RespostaListener.class));

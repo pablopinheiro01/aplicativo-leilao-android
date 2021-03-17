@@ -33,6 +33,8 @@ public class AtualizadorDeLeiloesTest {
     private LeilaoWebClient client;
     @Mock
     private Context context;
+    @Mock
+    private AtualizadorDeLeiloes.ErroCarregaLeiLoesListener listener;
 
     @Test
     public void deve_AtualizarListaDeLeiloes_QuandoBuscarLeiLoesDaAPI() throws InterruptedException {
@@ -55,7 +57,7 @@ public class AtualizadorDeLeiloesTest {
                 //passo atraves do argumentmatchers uma resposta qualquuer passando um listener qualquer...
                 .todos(ArgumentMatchers.any(RespostaListener.class));
 
-        atualizador.buscaLeiloes(adapter, client, context);
+        atualizador.buscaLeiloes(adapter, client, listener);
 
         //vamos verificar apenas se os metodos foram chamados conforme o esperado
         verify(client).todos(ArgumentMatchers.any(RespostaListener.class));
@@ -71,10 +73,7 @@ public class AtualizadorDeLeiloesTest {
 
     @Test
     public void deve_ApresentarMensagemDeFalha_QuandoFalharABuscaDeLeiLoes(){
-        //transformo em um objeto espiao
-        AtualizadorDeLeiloes atualizador = Mockito.spy(new AtualizadorDeLeiloes());
-        //nao e para fazer nada quando executar esse metodo
-        doNothing().when(atualizador).mostraMensagemDeFalha(context);
+        AtualizadorDeLeiloes atualizador = new AtualizadorDeLeiloes();
 
         doAnswer(new Answer() {
             @Override
@@ -85,10 +84,9 @@ public class AtualizadorDeLeiloesTest {
             }
         }).when(client).todos(ArgumentMatchers.any(RespostaListener.class));
 
-        atualizador.buscaLeiloes(adapter, client, context);
+        atualizador.buscaLeiloes(adapter, client, listener);
 
-        verify(atualizador).mostraMensagemDeFalha(context);
-
+        verify(listener).erroAoCarregar(anyString());
 
     }
 

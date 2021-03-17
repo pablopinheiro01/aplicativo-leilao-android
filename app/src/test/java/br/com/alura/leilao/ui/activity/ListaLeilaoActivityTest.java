@@ -40,9 +40,6 @@ public class ListaLeilaoActivityTest {
     public void deve_Atualizar_ListaDeLeiloes_QuandoBuscarLeiLoesDaAPI() throws InterruptedException {
         ListaLeilaoActivity activity = new ListaLeilaoActivity();
 
-        //donothin executa para objetos reais e nao mockados
-//        Mockito.doNothing().when(adapter).atualizaLista();
-
         //mockito executando uma resposta
         doAnswer(new Answer() {
             @Override
@@ -61,9 +58,6 @@ public class ListaLeilaoActivityTest {
                 .todos(ArgumentMatchers.any(RespostaListener.class));
 
         activity.buscaLeiloes(adapter, client);
-
-//        int quantidadeDeLeiloesDevolvida = adapter.getItemCount();
-//        assertThat(quantidadeDeLeiloesDevolvida, is(2));
 
         //vamos verificar apenas se os metodos foram chamados conforme o esperado
         verify(client).todos(ArgumentMatchers.any(RespostaListener.class));

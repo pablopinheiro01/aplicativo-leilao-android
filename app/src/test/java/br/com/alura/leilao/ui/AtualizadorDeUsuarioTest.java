@@ -32,11 +32,18 @@ public class AtualizadorDeUsuarioTest {
                 recyclerView);
 
         Usuario alex = new Usuario("Alex");
+        //o thenReturn analisa o tipo de retorno que a gente pode dar, simulamos o retorno do metodo do banco de dados
+        Mockito.when(dao.salva(alex)).thenReturn(new Usuario(1,"Alex"));
+
+        //eu simulo a posicao que eu quero que seja retornado no adapter no caso sera 0 devido o calculo feito na classe responsavel
+        Mockito.when(adapter.getItemCount()).thenReturn(1);
+
         atualizador.salva(alex);
 
-        Mockito.verify(dao).salva(alex);
-        Mockito.verify(adapter).adiciona(alex);
-        Mockito.verify(recyclerView).smoothScrollToPosition(adapter.getItemCount()-1);
+        Mockito.verify(dao).salva(new Usuario("Alex"));
+        Mockito.verify(adapter).adiciona(new Usuario(1,"Alex"));
+        Mockito.verify(recyclerView).smoothScrollToPosition(0);
+
     }
 
 }

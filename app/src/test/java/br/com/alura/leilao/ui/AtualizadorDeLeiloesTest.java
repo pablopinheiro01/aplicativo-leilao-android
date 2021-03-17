@@ -2,7 +2,6 @@ package br.com.alura.leilao.ui;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -17,7 +16,8 @@ import br.com.alura.leilao.api.retrofit.client.RespostaListener;
 import br.com.alura.leilao.model.Leilao;
 import br.com.alura.leilao.ui.recyclerview.adapter.ListaLeilaoAdapter;
 
-import static org.mockito.Mockito.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 
@@ -26,50 +26,38 @@ public class AtualizadorDeLeiloesTest {
 
     @Mock
     private ListaLeilaoAdapter adapter;
-    @Mock//por padrao objetos mockados nao fazem nada
+    @Mock
     private LeilaoWebClient client;
     @Mock
-    private AtualizadorDeLeiloes.ErroCarregaLeiLoesListener listener;
+    private AtualizadorDeLeiloes.ErroCarregaLeiloesListener listener;
 
     @Test
-    public void deve_AtualizarListaDeLeiloes_QuandoBuscarLeiLoesDaAPI() throws InterruptedException {
+    public void deve_AtualizarListaDeLeiloes_QuandoBuscarLeiloesDaApi() {
         AtualizadorDeLeiloes atualizador = new AtualizadorDeLeiloes();
-
-        //mockito executando uma resposta
         doAnswer(new Answer() {
             @Override
-            public Object answer(InvocationOnMock invocation) { //mockado a respsota da requisicao
-                // o objeto e do mesmo tipo do argumetno requisitado dentro do client.
-                //caso tivesse mais de um argumento eu preciso indicar a posicao, no caso do client so possui um unico argumento do tipo do objeto declarado
+            public Object answer(InvocationOnMock invocation) {
                 RespostaListener<List<Leilao>> argument = invocation.getArgument(0);
-                argument.sucesso(new ArrayList<Leilao>(Arrays.asList(
+                argument.sucesso(new ArrayList<>(Arrays.asList(
                         new Leilao("Computador"),
                         new Leilao("Carro")
                 )));
                 return null;
             }
-        }).when(client)//quando executado no client chamando o metodo todos
-                //passo atraves do argumentmatchers uma resposta qualquuer passando um listener qualquer...
-                .todos(ArgumentMatchers.any(RespostaListener.class));
+        }).when(client).todos(any(RespostaListener.class));
 
         atualizador.buscaLeiloes(adapter, client, listener);
 
-        //vamos verificar apenas se os metodos foram chamados conforme o esperado
-        verify(client).todos(ArgumentMatchers.any(RespostaListener.class));
-        // a lista de leilões tem que ser exatamente a mesma lista enviada na integração com o adapter
-        verify(adapter).atualiza(
-                new ArrayList<Leilao>(Arrays.asList(
-                        new Leilao("Computador"),
-                        new Leilao("Carro")
-                ))
-        );
-
+        verify(client).todos(any(RespostaListener.class));
+        verify(adapter).atualiza(new ArrayList<>(Arrays.asList(
+                new Leilao("Computador"),
+                new Leilao("Carro")
+        )));
     }
 
     @Test
-    public void deve_ApresentarMensagemDeFalha_QuandoFalharABuscaDeLeiLoes(){
+    public void deve_ApresentarMensagemDeFalha_QuandoFalharABuscaDeLeiloes(){
         AtualizadorDeLeiloes atualizador = new AtualizadorDeLeiloes();
-
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -77,12 +65,11 @@ public class AtualizadorDeLeiloesTest {
                 argument.falha(anyString());
                 return null;
             }
-        }).when(client).todos(ArgumentMatchers.any(RespostaListener.class));
+        }).when(client).todos(any(RespostaListener.class));
 
         atualizador.buscaLeiloes(adapter, client, listener);
 
         verify(listener).erroAoCarregar(anyString());
-
     }
 
 }

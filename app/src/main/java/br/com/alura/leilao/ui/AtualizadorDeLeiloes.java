@@ -9,8 +9,9 @@ import br.com.alura.leilao.ui.recyclerview.adapter.ListaLeilaoAdapter;
 
 public class AtualizadorDeLeiloes {
 
-
-    public void buscaLeiloes(final ListaLeilaoAdapter adapter, LeilaoWebClient client, final ErroCarregaLeiLoesListener erroListener) {
+    public void buscaLeiloes(final ListaLeilaoAdapter adapter,
+                             LeilaoWebClient client,
+                             final ErroCarregaLeiloesListener erroListener) {
         client.todos(new RespostaListener<List<Leilao>>() {
             @Override
             public void sucesso(List<Leilao> leiloes) {
@@ -24,8 +25,7 @@ public class AtualizadorDeLeiloes {
         });
     }
 
-
-    public interface ErroCarregaLeiLoesListener{
+    public interface ErroCarregaLeiloesListener {
         void erroAoCarregar(String mensagem);
     }
 }

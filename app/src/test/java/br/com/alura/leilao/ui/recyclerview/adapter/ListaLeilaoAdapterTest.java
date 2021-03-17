@@ -48,33 +48,29 @@ import br.com.alura.leilao.model.Leilao;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class) //indicando a inicialização do mockitoannotations.initmocks....
+@RunWith(MockitoJUnitRunner.class)
 public class ListaLeilaoAdapterTest {
 
-    @Mock //passando a responsabilidade de injetar o objeto para o mockito
+    @Mock
     private Context context;
-
-    @Spy // passando a responsabilidade de injetar o objeto para o mockito
-    private ListaLeilaoAdapter listaLeilaoAdapter = new ListaLeilaoAdapter(context);
+    @Spy
+    private ListaLeilaoAdapter adapter = new ListaLeilaoAdapter(context);
 
     @Test
     public void deve_AtualizarListaDeLeiloes_QuandoReceberListaDeLeiloes(){
-//        MockitoAnnotations.initMocks(this); //metodo deprecated substituido pela abordagem da anotação de classe
-        //no momento que estiver espiando o objeto nao vamos fazer nada quando chamar o metodo atualizaLista que encapsula notifydatasetchanged.
-        doNothing().when(listaLeilaoAdapter).atualizaLista();
+        doNothing().when(adapter).atualizaLista();
 
-        listaLeilaoAdapter.atualiza(new ArrayList<Leilao>(Arrays.asList(
+        adapter.atualiza(new ArrayList<>(Arrays.asList(
                 new Leilao("Console"),
                 new Leilao("Computador")
         )));
+        int quantidadeLeiloesDevolvida = adapter.getItemCount();
 
-        int quantidadeDeLeiloes = listaLeilaoAdapter.getItemCount();
-        //verifica o objeto mockado, e analisa se o metodo em questao foi chamado ou nao no caso o atualizalista
-        verify(listaLeilaoAdapter).atualizaLista();
-        assertThat(quantidadeDeLeiloes, is(2));
-
+        verify(adapter).atualizaLista();
+        assertThat(quantidadeLeiloesDevolvida, is(2));
     }
 
 }

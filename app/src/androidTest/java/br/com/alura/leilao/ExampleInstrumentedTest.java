@@ -7,13 +7,6 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import br.com.alura.leilao.model.Leilao;
-import br.com.alura.leilao.ui.recyclerview.adapter.ListaLeilaoAdapter;
-
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 /**
@@ -29,15 +22,5 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("br.com.alura.leilao", appContext.getPackageName());
-
-        ListaLeilaoAdapter listaLeilaoAdapter = new ListaLeilaoAdapter(appContext);
-        listaLeilaoAdapter.atualiza(new ArrayList<Leilao>(Arrays.asList(
-                new Leilao("Console"),
-                new Leilao("Computador")
-        )));
-
-        int quantidadeDeLeiloes = listaLeilaoAdapter.getItemCount();
-        //aqui e a execucao de testes chamado de TESTES INSTRUMENTAIS
-        assertThat(quantidadeDeLeiloes, is(2));
     }
 }

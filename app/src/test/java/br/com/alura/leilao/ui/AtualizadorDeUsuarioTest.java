@@ -13,6 +13,8 @@ import br.com.alura.leilao.model.Usuario;
 import br.com.alura.leilao.ui.recyclerview.adapter.ListaUsuarioAdapter;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AtualizadorDeUsuarioTest {
@@ -25,25 +27,20 @@ public class AtualizadorDeUsuarioTest {
     private RecyclerView recyclerView;
 
     @Test
-    public void deve_AtualizaListaDeUsuarios_QuandoSalvarUsuario(){
+    public void deve_AtualizarListaDeUsuario_QuandoSalvarUsuario(){
         AtualizadorDeUsuario atualizador = new AtualizadorDeUsuario(
                 dao,
                 adapter,
                 recyclerView);
-
         Usuario alex = new Usuario("Alex");
-        //o thenReturn analisa o tipo de retorno que a gente pode dar, simulamos o retorno do metodo do banco de dados
-        Mockito.when(dao.salva(alex)).thenReturn(new Usuario(1,"Alex"));
-
-        //eu simulo a posicao que eu quero que seja retornado no adapter no caso sera 0 devido o calculo feito na classe responsavel
-        Mockito.when(adapter.getItemCount()).thenReturn(1);
+        when(dao.salva(alex)).thenReturn(new Usuario(1, "Alex"));
+        when(adapter.getItemCount()).thenReturn(1);
 
         atualizador.salva(alex);
 
-        Mockito.verify(dao).salva(new Usuario("Alex"));
-        Mockito.verify(adapter).adiciona(new Usuario(1,"Alex"));
-        Mockito.verify(recyclerView).smoothScrollToPosition(0);
-
+        verify(dao).salva(new Usuario("Alex"));
+        verify(adapter).adiciona(new Usuario(1, "Alex"));
+        verify(recyclerView).smoothScrollToPosition(0);
     }
 
 }

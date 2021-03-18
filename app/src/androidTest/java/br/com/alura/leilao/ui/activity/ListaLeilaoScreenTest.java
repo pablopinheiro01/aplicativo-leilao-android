@@ -15,6 +15,7 @@ import java.util.List;
 import br.com.alura.leilao.R;
 import br.com.alura.leilao.api.retrofit.client.LeilaoWebClient;
 import br.com.alura.leilao.api.retrofit.client.TesteWebClient;
+import br.com.alura.leilao.formatter.FormatadorDeMoeda;
 import br.com.alura.leilao.model.Leilao;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -33,6 +34,8 @@ public class ListaLeilaoScreenTest {
     public ActivityTestRule<ListaLeilaoActivity> activity = new ActivityTestRule<>(ListaLeilaoActivity.class, true,false);
 
     private final TesteWebClient webClient = new TesteWebClient();
+    private FormatadorDeMoeda formatadorDeMoeda = new FormatadorDeMoeda();
+
 
     @Before //a anotacao roda sempre o metodo antes de qualquer teste
     //setup e o nome default que o mercado adota para essa tecnica
@@ -60,6 +63,15 @@ public class ListaLeilaoScreenTest {
                         withText("Carro"),withId(R.id.item_leilao_descricao)
                 )
                 //verifica se a view esta sendo exibida
+        ).check(matches(isDisplayed()));
+
+        String formatoEsperado = formatadorDeMoeda.formata(0.0);
+
+        onView(
+                allOf(
+                        withText(formatoEsperado),
+                        withId(R.id.item_leilao_maior_lance)
+                )
         ).check(matches(isDisplayed()));
     }
 

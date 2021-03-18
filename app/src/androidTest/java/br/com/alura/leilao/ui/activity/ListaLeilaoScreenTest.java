@@ -3,7 +3,9 @@ package br.com.alura.leilao.ui.activity;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -21,15 +23,28 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 public class ListaLeilaoScreenTest {
 
+    public static final String ERRO_LIMPEZA_BANCO_DE_DADOS = "Banco de dados não foi limpo";
+    public static final String LEILAO_NAO_SALVO = "Leilão não foi salvo: ";
+
     @Rule
     public ActivityTestRule<ListaLeilaoActivity> activity = new ActivityTestRule<>(ListaLeilaoActivity.class, true,false);
 
     private final TesteWebClient webClient = new TesteWebClient();
 
+    @Before //a anotacao roda sempre o metodo antes de qualquer teste
+    //setup e o nome default que o mercado adota para essa tecnica
+    public void setup() throws IOException {
+        limpaBancoDeDadosDaApi();
+    }
+
+    @After //executado sempre no final de todos os testes
+    //tearDown é um nome default que o mercado adotou para essa tecnica
+    public void tearDown() throws IOException {
+        limpaBancoDeDadosDaApi();
+    }
+
     @Test
     public void deve_AparecerUmLeiLao_QuandoCarregarUmLeiLaoNaAPI() throws IOException {
-
-        limpaBaseDeDadosDaApi();
 
         tentaSalvarLeilaoNaApi(new Leilao("Carro"));
 
@@ -45,7 +60,6 @@ public class ListaLeilaoScreenTest {
 
     @Test
     public void deve_AparecerDoisLeiloes_QuandoCarregarDoisLeiloesDaApi() throws IOException {
-        limpaBaseDeDadosDaApi();
 
         tentaSalvarLeilaoNaApi(new Leilao("Carro"), new Leilao("Computador"));
 
@@ -61,15 +75,16 @@ public class ListaLeilaoScreenTest {
                 .check(matches(isDisplayed()));
     }
 
-    private void limpaBaseDeDadosDaApi() throws IOException {
-        if(!webClient.limpaBancoDeDados()) Assert.fail("Banco de dados não foi limpo");
-    }
-
     private void tentaSalvarLeilaoNaApi(Leilao... leilaoList) throws IOException {
         for(Leilao l: leilaoList){
             Leilao carroSalvo = webClient.salva(l);
-            if(l == null) Assert.fail("Leilão não foi salvo: "+ l.getDescricao());
+            if(l == null) Assert.fail(LEILAO_NAO_SALVO + l.getDescricao());
         }
+    }
+
+
+    private void limpaBancoDeDadosDaApi() throws IOException {
+        if(!webClient.limpaBancoDeDados()) Assert.fail(ERRO_LIMPEZA_BANCO_DE_DADOS);
     }
 
 }

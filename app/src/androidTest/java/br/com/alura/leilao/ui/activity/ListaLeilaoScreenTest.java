@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 import br.com.alura.leilao.api.retrofit.client.LeilaoWebClient;
+import br.com.alura.leilao.api.retrofit.client.TesteWebClient;
 import br.com.alura.leilao.model.Leilao;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -24,7 +25,8 @@ public class ListaLeilaoScreenTest {
 
     @Test
     public void deve_AparecerUmLeiLao_QuandoCarregarUmLeiLaoNaAPI() throws IOException {
-        LeilaoWebClient webClient = new LeilaoWebClient();
+//        LeilaoWebClient webClient = new LeilaoWebClient();
+        TesteWebClient webClient = new TesteWebClient();
         if(!webClient.limpaBancoDeDados()) Assert.fail("Banco de dados não foi limpo");
 
         Leilao carroSalvo = webClient.salva(new Leilao("Carro"));

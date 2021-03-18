@@ -7,6 +7,7 @@ import br.com.alura.leilao.model.Leilao;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
@@ -18,4 +19,9 @@ public interface LeilaoService {
     @PUT("leilao/{id}/lance")
     Call<Void> propoe(@Path("id") Long id, @Body Lance lance);
 
+    @POST("leilao")
+    Call<Leilao> salva(@Body Leilao leilao);
+
+    @GET("reset")
+    Call<Void> limpaBancoDeDados();
 }

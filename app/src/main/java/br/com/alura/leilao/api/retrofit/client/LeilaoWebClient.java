@@ -1,5 +1,6 @@
 package br.com.alura.leilao.api.retrofit.client;
 
+import java.io.IOException;
 import java.util.List;
 
 import br.com.alura.leilao.api.retrofit.RetrofitInicializador;
@@ -52,8 +53,23 @@ public class LeilaoWebClient {
         });
     }
 
-    private boolean temDados(Response<List<Leilao>> response) {
+    private <T> boolean temDados(Response<T> response) {
         return response.isSuccessful() && response.body() != null;
     }
 
+    public Leilao salva(Leilao leilao) throws IOException {
+        Call<Leilao> call = service.salva(leilao);
+        //vamos utilizar a tecnica sincrona para realização dos testes, o metodo salva so vai ser chamado pelo nosso teste
+        Response<Leilao> resposta = call.execute();
+        if(temDados(resposta)){
+            return resposta.body();
+        }
+        return null;
+    }
+
+    public boolean limpaBancoDeDados() throws IOException {
+        Call<Void> call = service.limpaBancoDeDados();
+        Response<Void> resposta = call.execute();
+        return resposta.isSuccessful();
+    }
 }

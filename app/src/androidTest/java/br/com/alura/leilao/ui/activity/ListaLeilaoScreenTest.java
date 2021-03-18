@@ -12,6 +12,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.List;
 
+import br.com.alura.leilao.R;
 import br.com.alura.leilao.api.retrofit.client.LeilaoWebClient;
 import br.com.alura.leilao.api.retrofit.client.TesteWebClient;
 import br.com.alura.leilao.model.Leilao;
@@ -19,7 +20,9 @@ import br.com.alura.leilao.model.Leilao;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 
 public class ListaLeilaoScreenTest {
 
@@ -52,9 +55,12 @@ public class ListaLeilaoScreenTest {
         activity.launchActivity(new Intent());
 
         //Pega uma view e verifica se possui o texto informado
-        onView(withText("Carro"))
+        onView(//allOf recebe um varargs de validações que podem ser combinadas para validação de uma view
+                allOf(
+                        withText("Carro"),withId(R.id.item_leilao_descricao)
+                )
                 //verifica se a view esta sendo exibida
-                .check(matches(isDisplayed()));
+        ).check(matches(isDisplayed()));
     }
 
 
@@ -67,12 +73,19 @@ public class ListaLeilaoScreenTest {
         activity.launchActivity(new Intent());
 
         //Pega uma view e verifica se possui o texto informado
-        onView(withText("Carro"))
+        onView(
+                allOf(
+                    withText("Carro"),withId(R.id.item_leilao_descricao)
+                )
                 //verifica se a view esta sendo exibida
-                .check(matches(isDisplayed()));//Pega uma view e verifica se possui o texto informado
-        onView(withText("Computador"))
+        ).check(matches(isDisplayed()));//Pega uma view e verifica se possui o texto informado
+        onView(
+                allOf(
+                        withText("Computador"),
+                        withId(R.id.item_leilao_descricao)
+                )
                 //verifica se a view esta sendo exibida
-                .check(matches(isDisplayed()));
+        ).check(matches(isDisplayed()));
     }
 
     private void tentaSalvarLeilaoNaApi(Leilao... leilaoList) throws IOException {

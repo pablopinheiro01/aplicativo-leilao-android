@@ -51,18 +51,19 @@ public class ListaLeilaoScreenTest {
     @Test
     public void deve_AparecerUmLeiLao_QuandoCarregarUmLeiLaoNaAPI() throws IOException {
 
-        tentaSalvarLeilaoNaApi(new Leilao("Carro"));
+        tentaSalvarLeilaoNaApi(new Leilao("Carro"),new Leilao("Casa"));
 
 //        //inicializo a activity apos ter certeza que o salva foi executado
         activity.launchActivity(new Intent());
 
         onView(withId(R.id.lista_leilao_recyclerview)
-        ).check(matches(ViewMatchers.apareceLeilaoNaPosicao(0, "C", 0.00)));
+                //o lance esta sendo enviado com o valor 0.0 deixando a responsabilidade de formatação na sua classe especifica.
+        ).check(matches(ViewMatchers.apareceLeilaoNaPosicao(0, "Carro", 0.00)));
+
+        onView(withId(R.id.lista_leilao_recyclerview)
+        ).check(matches(ViewMatchers.apareceLeilaoNaPosicao(1, "Casa", 0.00)));
 
     }
-
-
-
 
     @Test
     public void deve_AparecerDoisLeiloes_QuandoCarregarDoisLeiloesDaApi() throws IOException {
@@ -72,20 +73,12 @@ public class ListaLeilaoScreenTest {
         //inicializo a activity apos ter certeza que o salva foi executado
         activity.launchActivity(new Intent());
 
-        //Pega uma view e verifica se possui o texto informado
-        onView(
-                allOf(
-                    withText("Carro"),withId(R.id.item_leilao_descricao)
-                )
-                //verifica se a view esta sendo exibida
-        ).check(matches(isDisplayed()));//Pega uma view e verifica se possui o texto informado
-        onView(
-                allOf(
-                        withText("Computador"),
-                        withId(R.id.item_leilao_descricao)
-                )
-                //verifica se a view esta sendo exibida
-        ).check(matches(isDisplayed()));
+        onView(withId(R.id.lista_leilao_recyclerview)
+        ).check(matches(ViewMatchers.apareceLeilaoNaPosicao(0, "Carro", 0.00)));
+
+        onView(withId(R.id.lista_leilao_recyclerview)
+        ).check(matches(ViewMatchers.apareceLeilaoNaPosicao(1, "Computador", 0.00)));
+
     }
 
     private void tentaSalvarLeilaoNaApi(Leilao... leilaoList) throws IOException {

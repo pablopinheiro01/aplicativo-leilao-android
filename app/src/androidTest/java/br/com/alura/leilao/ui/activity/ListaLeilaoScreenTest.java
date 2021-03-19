@@ -1,13 +1,8 @@
 package br.com.alura.leilao.ui.activity;
 
 import android.content.Intent;
-import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.rule.ActivityTestRule;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,12 +10,11 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.List;
 
 import br.com.alura.leilao.R;
-import br.com.alura.leilao.api.retrofit.client.LeilaoWebClient;
 import br.com.alura.leilao.api.retrofit.client.TesteWebClient;
 import br.com.alura.leilao.formatter.FormatadorDeMoeda;
+import br.com.alura.leilao.matchers.ViewMatchers;
 import br.com.alura.leilao.model.Leilao;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -57,48 +51,17 @@ public class ListaLeilaoScreenTest {
     @Test
     public void deve_AparecerUmLeiLao_QuandoCarregarUmLeiLaoNaAPI() throws IOException {
 
-//        tentaSalvarLeilaoNaApi(new Leilao("Carro"));
-//
+        tentaSalvarLeilaoNaApi(new Leilao("Carro"));
+
 //        //inicializo a activity apos ter certeza que o salva foi executado
-//        activity.launchActivity(new Intent());
-//
-//        //Pega uma view e verifica se possui o texto informado
-//        onView(//allOf recebe um varargs de validações que podem ser combinadas para validação de uma view
-//                allOf(
-//                        withText("Carro"),withId(R.id.item_leilao_descricao)
-//                )
-//                //verifica se a view esta sendo exibida
-//        ).check(matches(isDisplayed()));
-//
-//        String formatoEsperado = formatadorDeMoeda.formata(0.0);
-//
-//        onView(
-//                allOf(
-//                        withText(formatoEsperado),
-//                        withId(R.id.item_leilao_maior_lance)
-//                )
-//        ).check(matches(isDisplayed()));
+        activity.launchActivity(new Intent());
 
         onView(withId(R.id.lista_leilao_recyclerview)
-        ).check(matches(apareceLeilao()))
+        ).check(matches(ViewMatchers.apareceLeilaoNaPosicao(0, "C", 0.00)));
 
     }
 
-    private Matcher<? super View> apareceLeilao() {
 
-        new BoundedMatcher<View, RecyclerView>(RecyclerView.class){
-
-            @Override
-            public void describeTo(Description description) {
-                
-            }
-
-            @Override
-            protected boolean matchesSafely(RecyclerView item) {
-                return false;
-            }
-        }
-    }
 
 
     @Test

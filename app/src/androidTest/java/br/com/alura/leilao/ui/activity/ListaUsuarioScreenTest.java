@@ -29,6 +29,7 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.replaceText;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -36,12 +37,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
-@LargeTest
-@RunWith(AndroidJUnit4.class)
+//@LargeTest //anotacao para identificar o tipo de teste, neste caso e um teste qualificado como um teste grande
+//@RunWith(AndroidJUnit4.class) // sugestão para caso utilize features do junit 3 e junit 4 em paralelo, por meio dessa biblioteca temos a capacidade de dar o suporte para isso
 public class ListaUsuarioScreenTest {
 
     @Rule
-    public ActivityTestRule<ListaLeilaoActivity> mActivityTestRule = new ActivityTestRule<>(ListaLeilaoActivity.class);
+    public ActivityTestRule<ListaLeilaoActivity> mainActivity = new ActivityTestRule<>(ListaLeilaoActivity.class);
 
     @Before
     public void setup(){
@@ -59,68 +60,33 @@ public class ListaUsuarioScreenTest {
     }
 
     @Test
-    public void listaUsuarioScreenTest() {
-        ViewInteraction actionMenuItemView = onView(
-                allOf(withId(R.id.lista_leilao_menu_usuarios), withContentDescription("Usuários"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.action_bar),
-                                        1),
-                                0),
-                        isDisplayed()));
-        actionMenuItemView.perform(click());
+    public void deve_AparecerUsuarioNaListaDeUsuario_QuandoCadastrarUsuario() {
+        onView(
+                allOf(withId(R.id.lista_leilao_menu_usuarios),
+                        withContentDescription("Usuários"),
+                        //verifica se e o descendente de actionbar
+                       // isDescendantOfA(withId(R.id.action_bar)), //comentado devido nao ser necessario verificar se e descendente da action_Bar
+                        isDisplayed()))
+                .perform(click());
 
-        ViewInteraction floatingActionButton = onView(
-                allOf(withId(R.id.lista_usuario_fab_adiciona),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(android.R.id.content),
-                                        0),
-                                1),
-                        isDisplayed()));
-        floatingActionButton.perform(click());
+         onView(allOf(withId(R.id.lista_usuario_fab_adiciona),
+                 isDisplayed()))
+                 .perform(click());
 
-        ViewInteraction textInputEditText = onView(
-                allOf(childAtPosition(
-                        childAtPosition(
-                                withId(R.id.form_usuario_nome),
-                                0),
-                        0),
-                        isDisplayed()));
-        textInputEditText.perform(replaceText("Joao"), closeSoftKeyboard());
+        onView(allOf(withId(R.id.form_usuario_input_text),
+                isDisplayed()))
+                .perform(replaceText("Joao"), closeSoftKeyboard());
 
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(android.R.id.button1), withText("Adicionar"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.buttonPanel),
-                                        0),
-                                3)));
-        appCompatButton.perform(scrollTo(), click());
+        onView(allOf(
+                withId(android.R.id.button1), withText("Adicionar"),isDisplayed()
+        )).perform(scrollTo(), click());
 
-        ViewInteraction textView = onView(
-                allOf(withId(R.id.item_usuario_id_com_nome), withText("(1) Joao"),
-                        withParent(withParent(withId(R.id.lista_usuario_recyclerview))),
-                        isDisplayed()));
-        textView.check(matches(withText("(1) Joao")));
+        onView(
+                allOf(
+                        withId(R.id.item_usuario_id_com_nome),
+                        isDisplayed()
+                )
+        ).check(matches(withText("(1) Joao")));
     }
 
-    private static Matcher<View> childAtPosition(
-            final Matcher<View> parentMatcher, final int position) {
-
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Child at position " + position + " in parent ");
-                parentMatcher.describeTo(description);
-            }
-
-            @Override
-            public boolean matchesSafely(View view) {
-                ViewParent parent = view.getParent();
-                return parent instanceof ViewGroup && parentMatcher.matches(parent)
-                        && view.equals(((ViewGroup) parent).getChildAt(position));
-            }
-        };
-    }
 }

@@ -1,6 +1,7 @@
 package br.com.alura.leilao.ui.activity;
 
 import android.content.Intent;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 
 import org.junit.After;
@@ -111,9 +112,14 @@ public class ListaLeilaoScreenTest {
         activity.launchActivity(new Intent());
 
         onView(withId(R.id.lista_leilao_recyclerview)
-        ).check(
+        )
+                //scrolla a view ate a ultima posicao
+                //para utilizacao do perform eu desabilitei as opções graficas do smarthphone com a opção de desenvolvedor habilitada
+                //as opcoes desabilitadas foram as animation scale das opções do desenvolvedor
+                .perform(RecyclerViewActions.scrollToPosition(9))
+                .check(
                 matches(
-                        ViewMatchers.apareceLeilaoNaPosicao(6, "Estante", 0.00)));
+                        ViewMatchers.apareceLeilaoNaPosicao(9, "Casa", 0.00)));
 
 
     }

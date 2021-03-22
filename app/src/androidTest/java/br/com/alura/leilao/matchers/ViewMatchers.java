@@ -19,7 +19,7 @@ public class ViewMatchers {
 
         return new BoundedMatcher<View, RecyclerView>(RecyclerView.class){
 
-            private Matcher<View> displayed = isDisplayed();
+            private final Matcher<View> displayed = isDisplayed();
             private final FormatadorDeMoeda formatador = new FormatadorDeMoeda();
 
             private final String maiorLanceEsperadoFormatado = formatador.formata(maiorLanceEsperado);
@@ -43,23 +43,27 @@ public class ViewMatchers {
 
                 View viewDoViewHolder = viewHolderDevolvido.itemView;
 
-                boolean temDescricaoEsperada = verificaDescricaoEsperada(viewDoViewHolder);
+                boolean temDescricaoEsperada = apareceDescricaoEsperada(viewDoViewHolder);
 
-                boolean temMaiorLanceEsperado = verificaMaiorLanceEsperado(viewDoViewHolder);
+                boolean temMaiorLanceEsperado = apareceMaiorLanceEsperado(viewDoViewHolder);
 
                 return temDescricaoEsperada
                         && temMaiorLanceEsperado
                         && displayed.matches(viewDoViewHolder);
             }
 
-            private boolean verificaMaiorLanceEsperado(View viewDoViewHolder) {
+            private boolean apareceMaiorLanceEsperado(View viewDoViewHolder) {
                 TextView textViewMaiorLance = viewDoViewHolder.findViewById(R.id.item_leilao_maior_lance);
-                return textViewMaiorLance.getText().toString().equals(maiorLanceEsperadoFormatado);
+                return textViewMaiorLance.getText().toString().equals(maiorLanceEsperadoFormatado)
+                        //adicionado a garantia da visualização de todos os elementos desejados
+                        && displayed.matches(textViewMaiorLance);
             }
 
-            private boolean verificaDescricaoEsperada(View viewDoViewHolder) {
+            private boolean apareceDescricaoEsperada(View viewDoViewHolder) {
                 TextView textViewDescricao = viewDoViewHolder.findViewById(R.id.item_leilao_descricao);
-                return textViewDescricao.getText().toString().equals(descricaoEsperada);
+                return textViewDescricao.getText().toString().equals(descricaoEsperada)
+                        //adicionado a garantia da visualização de todos os elementos desejados
+                        && displayed.matches(textViewDescricao);
             }
         };
     }

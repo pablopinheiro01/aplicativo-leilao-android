@@ -120,8 +120,6 @@ public class ListaLeilaoScreenTest {
                 .check(
                 matches(
                         ViewMatchers.apareceLeilaoNaPosicao(9, "Casa", 0.00)));
-
-
     }
 
 }

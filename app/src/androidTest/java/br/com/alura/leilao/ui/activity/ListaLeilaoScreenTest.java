@@ -93,4 +93,29 @@ public class ListaLeilaoScreenTest {
         if(!webClient.limpaBancoDeDados()) Assert.fail(ERRO_LIMPEZA_BANCO_DE_DADOS);
     }
 
+    @Test
+    public void deve_AparecerUltimoLeilao_QuandoCarregarDezLeiloesDaApi() throws IOException {
+        tentaSalvarLeilaoNaApi(
+                new Leilao("Carro"),
+                new Leilao("Computador"),
+                new Leilao("Notebook"),
+                new Leilao("TV"),
+                new Leilao("Console"),
+                new Leilao("Jogo"),
+                new Leilao("Estante"),
+                new Leilao("Quadro"),
+                new Leilao("Iphone"),
+                new Leilao("Casa")
+        );
+
+        activity.launchActivity(new Intent());
+
+        onView(withId(R.id.lista_leilao_recyclerview)
+        ).check(
+                matches(
+                        ViewMatchers.apareceLeilaoNaPosicao(6, "Estante", 0.00)));
+
+
+    }
+
 }

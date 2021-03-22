@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import br.com.alura.leilao.BaseTesteIntegracao;
 import br.com.alura.leilao.R;
 import br.com.alura.leilao.api.retrofit.client.TesteWebClient;
 import br.com.alura.leilao.formatter.FormatadorDeMoeda;
@@ -25,17 +26,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
-public class ListaLeilaoScreenTest {
-
-    public static final String ERRO_LIMPEZA_BANCO_DE_DADOS = "Banco de dados não foi limpo";
-    public static final String LEILAO_NAO_SALVO = "Leilão não foi salvo: ";
+public class ListaLeilaoScreenTest extends BaseTesteIntegracao {
 
     @Rule
     public ActivityTestRule<ListaLeilaoActivity> activity = new ActivityTestRule<>(ListaLeilaoActivity.class, true,false);
 
-    private final TesteWebClient webClient = new TesteWebClient();
     private FormatadorDeMoeda formatadorDeMoeda = new FormatadorDeMoeda();
-
 
     @Before //a anotacao roda sempre o metodo antes de qualquer teste
     //setup e o nome default que o mercado adota para essa tecnica
@@ -82,17 +78,8 @@ public class ListaLeilaoScreenTest {
 
     }
 
-    private void tentaSalvarLeilaoNaApi(Leilao... leilaoList) throws IOException {
-        for(Leilao l: leilaoList){
-            Leilao carroSalvo = webClient.salva(l);
-            if(l == null) Assert.fail(LEILAO_NAO_SALVO + l.getDescricao());
-        }
-    }
 
 
-    private void limpaBancoDeDadosDaApi() throws IOException {
-        if(!webClient.limpaBancoDeDados()) Assert.fail(ERRO_LIMPEZA_BANCO_DE_DADOS);
-    }
 
     @Test
     public void deve_AparecerUltimoLeilao_QuandoCarregarDezLeiloesDaApi() throws IOException {

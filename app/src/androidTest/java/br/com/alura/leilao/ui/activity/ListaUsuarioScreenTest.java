@@ -20,6 +20,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import br.com.alura.leilao.BaseTesteIntegracao;
 import br.com.alura.leilao.BuildConfig;
 import br.com.alura.leilao.R;
 
@@ -39,7 +40,7 @@ import static org.hamcrest.Matchers.allOf;
 
 //@LargeTest //anotacao para identificar o tipo de teste, neste caso e um teste qualificado como um teste grande
 //@RunWith(AndroidJUnit4.class) // sugestão para caso utilize features do junit 3 e junit 4 em paralelo, por meio dessa biblioteca temos a capacidade de dar o suporte para isso
-public class ListaUsuarioScreenTest {
+public class ListaUsuarioScreenTest extends BaseTesteIntegracao {
 
     @Rule
     public ActivityTestRule<ListaLeilaoActivity> mainActivity = new ActivityTestRule<>(ListaLeilaoActivity.class);
@@ -54,10 +55,7 @@ public class ListaUsuarioScreenTest {
         limpaDBLocal();
     }
 
-    private void limpaDBLocal() {
-        Context context = InstrumentationRegistry.getTargetContext();
-        context.deleteDatabase(BuildConfig.DB);
-    }
+
 
     @Test
     public void deve_AparecerUsuarioNaListaDeUsuario_QuandoCadastrarUsuario() {

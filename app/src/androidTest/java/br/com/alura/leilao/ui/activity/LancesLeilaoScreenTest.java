@@ -189,4 +189,231 @@ public class LancesLeilaoScreenTest extends BaseTesteIntegracao {
                 )
         );
     }
+
+    @Test
+    public void deve_AtualizarLancesDoLeilao_QuandoReceberTresLances() throws IOException {
+        //salva leilao na api
+        tentaSalvarLeilaoNaApi(new Leilao("Carro"));
+
+        //inicializa activity
+        activity.launchActivity(new Intent());
+
+        //clica no leilao
+        onView(withId(R.id.lista_leilao_recyclerview))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
+
+        //clica no fab da tela de lances do leilao
+        onView(allOf(
+                withId(R.id.lances_leilao_fab_adiciona), isDisplayed()
+        )).perform(click());
+
+        //verifica se aparece o dialog com o aviso por nao ter usuario com titulo e mensagem esperada
+        onView(allOf(withText("Usuários não encontrados"),
+                //encontrei o alertTitle alterando o texto acima provocando um erro, apos a exibicao da stack de erro eu busquei na hierarquia
+                //o res-name que seria o nome do recurso assim consigo realizar o match se o texto acima esta sendo apresentado no recurso esperado
+                withId(R.id.alertTitle)))
+                .check(matches(isDisplayed()));
+
+        onView(allOf(
+                withText("Não existe usuários cadastrados! Cadastre um usuário para propor o lance."),
+                withId(android.R.id.message)))//tecnica utilizada descrita acima para buscar o nome do recurso neste caso referenciei o id do android e nao do meu pacote
+                .check(matches(isDisplayed()));
+
+        //clica em cadastrar usuario dentro do dialog
+        onView(allOf(
+                withText("Cadastrar usuário"),
+                isDisplayed()))
+                .perform(click());
+
+        //clica no FAB para cadastrar novo usuario - tela de lista de usuarios
+        onView(allOf(withId(R.id.lista_usuario_fab_adiciona),
+                isDisplayed()))
+                .perform(click());
+
+        //clica no edittext e preenche com o nome do usuario
+        onView(allOf(withId(R.id.form_usuario_input_text),
+                isDisplayed()))
+                .perform(
+                        click(),
+                        typeText("Joao"), //alterado para digitar o texto na view como o usuario
+                        closeSoftKeyboard());
+
+        //clica em adicionar
+        onView(allOf(
+                withId(android.R.id.button1), withText("Adicionar"),isDisplayed()
+        )).perform(scrollTo(), click());
+
+        //clica no FAB para cadastrar novo usuario - tela de lista de usuarios
+        onView(allOf(withId(R.id.lista_usuario_fab_adiciona),
+                isDisplayed()))
+                .perform(click());
+
+        //clica no edittext e preenche com o nome do usuario
+        onView(allOf(withId(R.id.form_usuario_input_text),
+                isDisplayed()))
+                .perform(
+                        click(),
+                        typeText("Fran"), //alterado para digitar o texto na view como o usuario
+                        closeSoftKeyboard());
+
+        //clica em adicionar
+        onView(allOf(
+                withId(android.R.id.button1), withText("Adicionar"),isDisplayed()
+        )).perform(scrollTo(), click());
+
+        //clica no back do android e volta para a tela onde tem os lances do leilao
+        Espresso.pressBack();
+
+        //clica no FAB
+        onView(allOf(withId(R.id.lances_leilao_fab_adiciona),isDisplayed()))
+                .perform(click());
+
+        //verifica visibilidade do dialog com o titulo esperado
+        onView(allOf(
+                withText("Novo lance"),
+                withId(R.id.alertTitle)))
+                .check(matches(isDisplayed()));
+
+        //clica no edittext de valor e preenche
+        onView(allOf(
+                withId(R.id.form_lance_valor_edittext),
+                isDisplayed())
+        ).perform(
+                click(),
+                typeText("200"),
+                closeSoftKeyboard());
+
+        //seleciona o usuario
+        onView(allOf(
+                withId(R.id.form_lance_usuario),
+                isDisplayed())
+        ).perform(click());
+
+        //indica que vamos pegar um usuario com um id e com o nome
+        // o ondata faz a interação com a view e ele seleciona o objeto esperado
+        onData(is(new Usuario(1,"Joao")))
+                //vamos indicar o root para pegar o foco com o isPlatformPopup()
+                .inRoot(isPlatformPopup())
+                .perform(click());
+
+        //clica no botao propor para adicionar novo lance
+        onView(allOf(
+                withText("Propor"),
+                isDisplayed())
+        ).perform(click());
+
+
+        //segundo lance===================================================
+        //clica no FAB
+        onView(allOf(withId(R.id.lances_leilao_fab_adiciona),isDisplayed()))
+                .perform(click());
+
+        //verifica visibilidade do dialog com o titulo esperado
+        onView(allOf(
+                withText("Novo lance"),
+                withId(R.id.alertTitle)))
+                .check(matches(isDisplayed()));
+
+        //clica no edittext de valor e preenche
+        onView(allOf(
+                withId(R.id.form_lance_valor_edittext),
+                isDisplayed())
+        ).perform(
+                click(),
+                typeText("300"),
+                closeSoftKeyboard());
+
+        //seleciona o usuario
+        onView(allOf(
+                withId(R.id.form_lance_usuario),
+                isDisplayed())
+        ).perform(click());
+
+        //indica que vamos pegar um usuario com um id e com o nome
+        // o ondata faz a interação com a view e ele seleciona o objeto esperado
+        onData(is(new Usuario(2,"Fran")))
+                //vamos indicar o root para pegar o foco com o isPlatformPopup()
+                .inRoot(isPlatformPopup())
+                .perform(click());
+
+        //clica no botao propor para adicionar novo lance
+        onView(allOf(
+                withText("Propor"),
+                isDisplayed())
+        ).perform(click());
+
+        //TERCEIRO LANCE ================================================
+
+        //clica no FAB
+        onView(allOf(withId(R.id.lances_leilao_fab_adiciona),isDisplayed()))
+                .perform(click());
+
+        //verifica visibilidade do dialog com o titulo esperado
+        onView(allOf(
+                withText("Novo lance"),
+                withId(R.id.alertTitle)))
+                .check(matches(isDisplayed()));
+
+        //clica no edittext de valor e preenche
+        onView(allOf(
+                withId(R.id.form_lance_valor_edittext),
+                isDisplayed())
+        ).perform(
+                click(),
+                typeText("400"),
+                closeSoftKeyboard());
+
+        //seleciona o usuario
+        onView(allOf(
+                withId(R.id.form_lance_usuario),
+                isDisplayed())
+        ).perform(click());
+
+        //indica que vamos pegar um usuario com um id e com o nome
+        // o ondata faz a interação com a view e ele seleciona o objeto esperado
+        onData(is(new Usuario(1,"Joao")))
+                //vamos indicar o root para pegar o foco com o isPlatformPopup()
+                .inRoot(isPlatformPopup())
+                .perform(click());
+
+        //clica no botao propor para adicionar novo lance
+        onView(allOf(
+                withText("Propor"),
+                isDisplayed())
+        ).perform(click());
+
+
+
+
+        //fazer assertion para as views de maior e menor lance
+        FormatadorDeMoeda formatador = new FormatadorDeMoeda();
+        onView(withId(R.id.lances_leilao_maior_lance))
+                .check(
+                        matches(
+                                allOf(
+                                        withText(formatador.formata(400)),isDisplayed()
+                                )
+                        )
+                );
+        onView(withId(R.id.lances_leilao_menor_lance))
+                .check(
+                        matches(
+                                allOf(withText(formatador.formata(200)),isDisplayed()
+                                )
+                        )
+                );
+        //fazer assertion para os maiores lances
+        onView(withId(R.id.lances_leilao_maiores_lances))
+                .check(
+                        matches(
+                                allOf(withText("400.0 - (1) Joao\n"
+                                        +"300.0 - (2) Fran\n"
+                                        +"200.0 - (1) Joao\n"),
+                                        isDisplayed()
+                                )
+                        )
+                );
+    }
+
+
 }

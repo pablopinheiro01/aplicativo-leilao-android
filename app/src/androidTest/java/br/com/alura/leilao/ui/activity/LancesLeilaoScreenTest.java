@@ -134,6 +134,38 @@ public class LancesLeilaoScreenTest extends BaseTesteIntegracao {
                 .perform(click());
 
         //verifica visibilidade do dialog com o titulo esperado
+        onView(allOf(
+                withText("Novo lance"),
+                withId(R.id.alertTitle)))
+                .check(matches(isDisplayed()));
+
+        //clica no edittext de valor e preenche
+        onView(allOf(
+                withId(R.id.form_lance_valor_edittext),
+                isDisplayed())
+        ).perform(
+                click(),
+                typeText("200"),
+                closeSoftKeyboard());
+
+        //seleciona o usuario
+        onView(allOf(
+                withId(R.id.form_lance_usuario),
+                isDisplayed())
+        ).perform(click());
+
+        //indica que vamos pegar um usuario com um id e com o nome
+        // o ondata faz a interação com a view e ele seleciona o objeto esperado
+        onData(is(new Usuario(1,"Joao")))
+                //vamos indicar o root para pegar o foco com o isPlatformPopup()
+                .inRoot(isPlatformPopup())
+                .perform(click());
+
+        //clica no botao propor para adicionar novo lance
+        onView(allOf(
+                withText("Propor"),
+                isDisplayed())
+        ).perform(click());
 
 
         //fazer assertion para as views de maior e menor lance

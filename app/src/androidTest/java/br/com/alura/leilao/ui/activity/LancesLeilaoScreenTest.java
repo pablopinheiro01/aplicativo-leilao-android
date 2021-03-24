@@ -134,7 +134,7 @@ public class LancesLeilaoScreenTest extends BaseTesteIntegracao {
                 .perform(click());
 
         //verifica visibilidade do dialog com o titulo esperado
-        propoemNovoLance("200", 1, "Joao");
+
 
         //fazer assertion para as views de maior e menor lance
         FormatadorDeMoeda formatador = new FormatadorDeMoeda();
@@ -157,7 +157,7 @@ public class LancesLeilaoScreenTest extends BaseTesteIntegracao {
         onView(withId(R.id.lances_leilao_maiores_lances))
                 .check(
                         matches(
-                            allOf(withText("200.0 - (1) Joao\n"), isDisplayed()
+                            allOf(withText(formatador.formata(200)+" - (1) Joao\n"), isDisplayed()
                         )
                 )
         );
@@ -202,9 +202,53 @@ public class LancesLeilaoScreenTest extends BaseTesteIntegracao {
         onView(withId(R.id.lances_leilao_maiores_lances))
                 .check(
                         matches(
-                                allOf(withText("400.0 - (1) Joao\n"
-                                        +"300.0 - (2) Fran\n"
-                                        +"200.0 - (1) Joao\n"),
+                                allOf(withText(formatador.formata(400)+" - (1) Joao\n"
+                                        +formatador.formata(300)+" - (2) Fran\n"
+                                        +formatador.formata(200)+" - (1) Joao\n"),
+                                        isDisplayed()
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void deve_AtualizarLancesDoLeilao_QuandoReceberLanceMuitoAlto() throws IOException {
+        //salva leilao na api
+        tentaSalvarLeilaoNaApi(new Leilao("Carro"));
+        tentaSalvarUsuariosNoBancoDeDados(new Usuario("Joao"));
+
+        //inicializa activity
+        activity.launchActivity(new Intent());
+
+        //clica no leilao
+        onView(withId(R.id.lista_leilao_recyclerview))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
+
+        propoemNovoLance("2000000000", 1, "Joao");
+
+
+        //fazer assertion para as views de maior e menor lance
+        FormatadorDeMoeda formatador = new FormatadorDeMoeda();
+        onView(withId(R.id.lances_leilao_maior_lance))
+                .check(
+                        matches(
+                                allOf(
+                                        withText(formatador.formata(2000000000)),isDisplayed()
+                                )
+                        )
+                );
+        onView(withId(R.id.lances_leilao_menor_lance))
+                .check(
+                        matches(
+                                allOf(withText(formatador.formata(2000000000)),isDisplayed()
+                                )
+                        )
+                );
+        //fazer assertion para os maiores lances
+        onView(withId(R.id.lances_leilao_maiores_lances))
+                .check(
+                        matches(
+                                allOf(withText(formatador.formata(2000000000)+" - (1) Joao\n"),
                                         isDisplayed()
                                 )
                         )

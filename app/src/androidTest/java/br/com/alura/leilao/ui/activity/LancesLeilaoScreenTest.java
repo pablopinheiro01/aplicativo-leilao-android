@@ -94,28 +94,11 @@ public class LancesLeilaoScreenTest extends BaseTesteIntegracao {
         //clica no edittext e preenche com o nome do usuario
         onView(allOf(withId(R.id.form_usuario_input_text),
                 isDisplayed()))
-                .perform(replaceText("Carlos"), closeSoftKeyboard());
-        //clica em adicionar
-        onView(allOf(
-                withId(android.R.id.button1), withText("Adicionar"),isDisplayed()
-        )).perform(scrollTo(), click());
-
-
-
-        //clica no FAB para cadastrar novo usuario - tela de lista de usuarios
-        onView(allOf(withId(R.id.lista_usuario_fab_adiciona),
-                isDisplayed()))
-                .perform(click());
-        //clica no edittext e preenche com o nome do usuario
-        onView(allOf(withId(R.id.form_usuario_input_text),
-                isDisplayed()))
                 .perform(replaceText("Joao"), closeSoftKeyboard());
         //clica em adicionar
         onView(allOf(
                 withId(android.R.id.button1), withText("Adicionar"),isDisplayed()
         )).perform(scrollTo(), click());
-
-
 
 
 
@@ -136,7 +119,7 @@ public class LancesLeilaoScreenTest extends BaseTesteIntegracao {
                 .perform(click());
         //indica que vamos pegar um usuario com um id e com o nome
         // o ondata faz a interação com a view e ele seleciona o objeto esperado
-        onData(is(new Usuario(2,"Joao")))
+        onData(is(new Usuario(1,"Joao")))
                 //vamos indicar o root para pegar o foco com o isPlatformPopup()
                 .inRoot(isPlatformPopup())
                 .perform(click());
@@ -164,7 +147,7 @@ public class LancesLeilaoScreenTest extends BaseTesteIntegracao {
         onView(withId(R.id.lances_leilao_maiores_lances))
                 .check(
                         matches(
-                            allOf(withText("200.0 - (2) Joao\n"), isDisplayed()
+                            allOf(withText("200.0 - (1) Joao\n"), isDisplayed()
                         )
                 )
         );

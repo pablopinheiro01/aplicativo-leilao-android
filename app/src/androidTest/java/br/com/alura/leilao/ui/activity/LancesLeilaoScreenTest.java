@@ -1,6 +1,7 @@
 package br.com.alura.leilao.ui.activity;
 
 import android.content.Intent;
+import android.support.test.espresso.Espresso;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 
@@ -12,14 +13,23 @@ import java.io.IOException;
 
 import br.com.alura.leilao.BaseTesteIntegracao;
 import br.com.alura.leilao.R;
+import br.com.alura.leilao.formatter.FormatadorDeMoeda;
 import br.com.alura.leilao.model.Leilao;
+import br.com.alura.leilao.model.Usuario;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.replaceText;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.is;
 
 public class LancesLeilaoScreenTest extends BaseTesteIntegracao {
 
@@ -77,6 +87,70 @@ public class LancesLeilaoScreenTest extends BaseTesteIntegracao {
         //clica em cadastrar usuario dentro do dialog
         onView(withText("Cadastrar usuário"))
                 .perform(click());
+        //clica no FAB para cadastrar novo usuario - tela de lista de usuarios
+        onView(allOf(withId(R.id.lista_usuario_fab_adiciona),
+                isDisplayed()))
+                .perform(click());
+        //clica no edittext e preenche com o nome do usuario
+        onView(allOf(withId(R.id.form_usuario_input_text),
+                isDisplayed()))
+                .perform(replaceText("Joao"), closeSoftKeyboard());
+        //clica em adicionar
+        onView(allOf(
+                withId(android.R.id.button1), withText("Adicionar"),isDisplayed()
+        )).perform(scrollTo(), click());
+        
+
+        //clica no back do android e volta para a tela onde tem os lances do leilao
+        Espresso.pressBack();
+
+        //clica no FAB
+        onView(withId(R.id.lances_leilao_fab_adiciona))
+                .perform(click());
+        //verifica visibilidade do dialog com o titulo esperado
+        onView(withText("Novo lance"))
+                .check(matches(isDisplayed()));
+        //clica no edittext de valor e preenche
+        onView(withId(R.id.form_lance_valor_edittext))
+                .perform(click(),replaceText("200"), closeSoftKeyboard());
+        //seleciona o usuario
+        onView(withId(R.id.form_lance_usuario))
+                .perform(click());
+        //indica que vamos pegar um usuario com um id e com o nome
+        // o ondata faz a interação com a view e ele seleciona o objeto esperado
+        onData(is(new Usuario(1,"Joao")))
+                //vamos indicar o root para pegar o foco com o isPlatformPopup()
+                .inRoot(isPlatformPopup())
+                .perform(click());
+
+        //clica no botao propor para adicionar novo lance
+        onView(withText("Propor")).perform(click());
+        //fazer assertion para as views de maior e menor lance
+        FormatadorDeMoeda formatador = new FormatadorDeMoeda();
+        onView(withId(R.id.lances_leilao_maior_lance))
+                .check(
+                        matches(
+                                allOf(
+                                        withText(formatador.formata(200)),isDisplayed()
+                                )
+                        )
+                );
+        onView(withId(R.id.lances_leilao_menor_lance))
+                .check(
+                        matches(
+                                allOf(withText(formatador.formata(200)),isDisplayed()
+                                )
+                        )
+                );
+        //fazer assertion para os maiores lances
+        onView(withId(R.id.lances_leilao_maiores_lances))
+                .check(
+                        matches(
+                            allOf(withText("200.0 - (1) Joao\n"), isDisplayed()
+                        )
+                )
+        );
+
 
 
 
